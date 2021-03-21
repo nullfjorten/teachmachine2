@@ -1,13 +1,11 @@
 <template>
-    <div class="dark panel">
+    <div class="dark panel" style="margin: 0;">
         <div>
             <h2>{{ problem }} =</h2>
         </div>
 
         <div>
-            <button title="Nullstill svar" @click="answer = ''; focusInputField();">X</button>
             <input type="text" v-model="answer" ref="txtAnswer" pattern="\d*" placeholder="Skriv svaret her">
-            <button @click="generateProblem">Nytt problem</button>
         </div>
 
         <div class="dark panel">
@@ -323,10 +321,15 @@ export default {
     }
     button {
         background-color: rgba(30, 56, 136, 1);
-        border-color: #555;
+        border: 2px solid #555;
         margin: .2em;
+        padding: 10px;
         color: #ddd;
         font-weight: bold;
+        border-radius: 5px;
+    }
+    input {
+        padding: 6px;
     }
     button.active {
         border: 2px solid #555;
