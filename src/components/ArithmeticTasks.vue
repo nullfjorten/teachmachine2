@@ -5,10 +5,10 @@
         </div>
 
         <div>
-            <input type="text" v-model="answer" ref="txtAnswer" pattern="\d*" placeholder="Skriv svaret her">
+            <input type="text" v-model="answer" ref="txtAnswer" @keypress.enter="enterPressed()" pattern="\d*" placeholder="Skriv svaret her">
         </div>
 
-        <div class="dark panel">
+        <div class="dark panel" style="padding: 0">
             <div class="light panel">
                 <p>Antall riktige: {{ numCorrectAnswers }}</p>
                 <div>
@@ -38,7 +38,7 @@
     <div v-show="true">
         <p>Skann denne QR-koden med mobilen for å få lenken til nettstedet:</p>
         <div>
-            <a href="https://teachmachine014.firebaseapp.com">
+            <a href="https://teachmachine014.web.app">
                 <img src="../assets/qr-link.png" alt="QR-kode, link til siden">
             </a>
         </div>
@@ -249,6 +249,9 @@ export default {
         },
         focusInputField() {
             this.$refs.txtAnswer.focus();
+        },
+        enterPressed() {
+            this.answer = '';
         },
         getRandomInt (min, max) {
             let a = Math.floor(Math.random() * (max - min + 1)) + min;
