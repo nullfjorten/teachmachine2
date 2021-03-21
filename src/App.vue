@@ -1,15 +1,14 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <ArithmeticTasks />
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import ArithmeticTasks from './components/ArithmeticTasks.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    ArithmeticTasks
   }
 }
 </script>
