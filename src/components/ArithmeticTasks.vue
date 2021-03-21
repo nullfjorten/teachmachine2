@@ -43,7 +43,7 @@
             </a>
         </div>
         <p>
-            <a href="https://github.com/nullfjorten/teachmachine" target="_blank">Eller klikk her for prosjektets kildekode.</a>
+            <a href="https://github.com/nullfjorten/teachmachine2/blob/main/src/components/ArithmeticTasks.vue" target="_blank">Eller klikk her for prosjektets kildekode.</a>
         </p>
     </div>
 </template>
@@ -287,10 +287,8 @@ export default {
                 if (this.a == '0' || this.a == '1' || this.a == '10' || this.b == '0' || this.b == '1' || this.b == '10') {
                     if (Math.random() >= 0.25) {
                         this.setRandomIntAB(arrMinMaxA, arrMinMaxB);
-                        //console.log('A: '+ this.a +'. Regenerating.');
                         return;
                     }
-                    //console.log('A: '+ this.a +'. Keeping.');
                 }
             }
         },
