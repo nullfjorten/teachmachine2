@@ -1,6 +1,6 @@
 A rewrite of Teachmachine, a web app for training math.
 
-# teachmachine015
+# teachmachine014
 
 ## Project setup
 ```
