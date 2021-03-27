@@ -1,12 +1,22 @@
 <template>
     <h1>Brøk</h1>
     <div class="container">
-        <single-fraction numerator=2 denominator=4 />
+        <template v-for="(fraction, index) in fractions" :key="index">
+            <single-fraction v-bind:starting-numerator="fraction.startingNumerator" v-bind:starting-denominator="fraction.startingDenominator" />
+            <div v-if="index < fractions.length-1">
+                +
+            </div>
+            <div v-else>
+                =
+            </div>
+        </template>
+
+        <!-- <single-fraction v-bind:starting-numerator="fractions[0].startingNumerator" v-bind:starting-denominator="fractions[0].startingDenominator" />
         <div>+</div>
-        <single-fraction numerator=5 denominator=3 />
+        <single-fraction v-bind:starting-numerator="fractions[1].startingNumerator" v-bind:starting-denominator="fractions[1].startingDenominator" />
         <div>+</div>
-        <single-fraction numerator=180 denominator=180 />
-        <div>=</div>
+        <single-fraction v-bind:starting-numerator="fractions[2].startingNumerator" v-bind:starting-denominator="fractions[2].startingDenominator" />
+        <div>=</div> -->
         <input type="text">
     </div>
 </template>
@@ -16,6 +26,24 @@ import SingleFraction from '@/components/fractions/SingleFraction.vue'
 export default {
     components: {
         SingleFraction
+    },
+    data() {
+        return {
+            fractions: [
+                {
+                    startingNumerator: 2,
+                    startingDenominator: 4,
+                },
+                {
+                    startingNumerator: 5,
+                    startingDenominator: 3,
+                },
+                {
+                    startingNumerator: 180,
+                    startingDenominator: 180,
+                },
+            ]
+        }
     }
 }
 </script>
@@ -35,7 +63,7 @@ export default {
 hr {
     border: 1px solid;
 }
-input[type=text] {
+starting[type=text] {
     width: 40px;
     margin-left: 5px;
 }
