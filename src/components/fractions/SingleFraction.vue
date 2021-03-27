@@ -17,7 +17,7 @@
                 <span class="faded">{{startingDenominator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedDenominator}}
             </span>
         </div>
-        <div v-if="showControls" class="fas fa-arrow-down" @click="decreaseFraction()"></div>
+        <div v-if="showControls" class="fas fa-arrow-down" :class="{ faded: !isReducible }" @click="decreaseFraction()"></div>
     </div>
 </template>
 
@@ -69,7 +69,14 @@ export default {
             } else {
                 return false
             }
-        }
+        },
+        isReducible() {
+            const nextDecreasedModifier = this.getNextDecreasedModifier(this.modifier)
+            if (nextDecreasedModifier === false) {
+                return false
+            }
+            return true
+        },
     },
     watch:
     {
@@ -107,7 +114,7 @@ export default {
             }
             if (this.modifier < 0) {
                 this.modifier++
-                while (!this.isDivisible()) {
+                while (!this.isDivisible(this.modifier)) {
                     this.modifier++
                 }
                 return
@@ -115,35 +122,59 @@ export default {
             this.modifier++
         },
         decreaseFraction() {
-            const originalModifier = this.modifier
-            if (this.modifier == 2) { // Skip 1
-                this.modifier = 0
-                return
+            const nextDecreasedModifier = this.getNextDecreasedModifier(this.modifier)
+            if (nextDecreasedModifier !== false) {
+                this.modifier = nextDecreasedModifier
             }
-            if (this.modifier > 0) {
-                this.modifier--;
+            // const originalModifier = this.modifier
+            // if (this.modifier == 2) { // Skip 1
+            //     this.modifier = 0
+            //     return
+            // }
+            // if (this.modifier > 0) {
+            //     this.modifier--;
+            //     return
+            // }
+
+            // if (this.modifier == 0) { // Skip -1
+            //     this.modifier = -2 
+            // } else {
+            //     this.modifier--
+            // }
+            // while (!this.isDivisible(this.modifier)) {
+            //     if (this.positivizedMod > this.startingNumerator || this.positivizedMod > this.startingDenominator) {
+            //         this.modifier = originalModifier
+            //         break
+            //     }
+            //     this.modifier--
+            // }
+        },
+        getNextDecreasedModifier(modifier) {
+            if (modifier == 2) { // Skip 1
+                return 0
+            }
+            if (modifier > 0) {
+                modifier--;
                 return
             }
 
-            if (this.modifier == 0) { // Skip -1
-                this.modifier = -2 
+            if (modifier == 0) { // Skip -1
+                modifier = -2 
             } else {
-                this.modifier--
+                modifier--
             }
-            while (!this.isDivisible()) {
-                if (this.positivizedMod > this.startingNumerator || this.positivizedMod > this.startingDenominator) {
-                    this.modifier = originalModifier
-                    break
+            while (!this.isDivisible(modifier)) {
+                if (modifier*-1 > this.startingNumerator || this.modifier*-1 > this.startingDenominator) {
+                    return false
                 }
-                this.modifier--
+                modifier--
             }
+            return modifier
         },
-        isDivisible() {
-            var positiveMod = null
-            if (this.modifier == 0) { return false }
-            if (this.modifier > 0 ) { positiveMod = this.modifier }
-            if (this.modifier < 0 ) { positiveMod = this.positivizedMod }
-            return (this.startingDenominator % positiveMod === 0) && (this.startingNumerator % positiveMod === 0)
+        isDivisible(modifier) {
+            if (modifier == 0) { return false }
+            modifier = (modifier < 0 ? modifier*-1 : modifier)
+            return (this.startingDenominator % modifier === 0) && (this.startingNumerator % modifier === 0)
         }
     }
 }
