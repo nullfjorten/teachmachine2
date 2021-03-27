@@ -126,28 +126,6 @@ export default {
             if (nextDecreasedModifier !== false) {
                 this.modifier = nextDecreasedModifier
             }
-            // const originalModifier = this.modifier
-            // if (this.modifier == 2) { // Skip 1
-            //     this.modifier = 0
-            //     return
-            // }
-            // if (this.modifier > 0) {
-            //     this.modifier--;
-            //     return
-            // }
-
-            // if (this.modifier == 0) { // Skip -1
-            //     this.modifier = -2 
-            // } else {
-            //     this.modifier--
-            // }
-            // while (!this.isDivisible(this.modifier)) {
-            //     if (this.positivizedMod > this.startingNumerator || this.positivizedMod > this.startingDenominator) {
-            //         this.modifier = originalModifier
-            //         break
-            //     }
-            //     this.modifier--
-            // }
         },
         getNextDecreasedModifier(modifier) {
             if (modifier == 2) { // Skip 1
