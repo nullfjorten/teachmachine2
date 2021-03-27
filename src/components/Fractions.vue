@@ -2,23 +2,57 @@
     <h1>Brøk</h1>
     <div class="container">
         <template v-for="(fraction, index) in fractions" :key="index">
-            <single-fraction v-bind:starting-numerator="fraction.startingNumerator" v-bind:starting-denominator="fraction.startingDenominator" />
+            <single-fraction 
+                v-bind:starting-numerator="fraction.startingNumerator" 
+                v-bind:starting-denominator="fraction.startingDenominator" 
+                v-bind:id="index"
+                @modifierChanged="modifierChanged"
+            />
             <div v-if="index < fractions.length-1">
                 +
             </div>
-            <div v-else>
-                =
+        </template>
+        =<br>
+    </div>
+    <br>
+    <div class="container">
+        <template v-for="(fraction, index) in fractions" :key="index">
+            <single-fraction 
+                :starting-numerator="fraction.modifiedNumerator" 
+                :starting-denominator="fraction.modifiedDenominator" 
+                :id="index"
+                :show-controls="false"
+            />
+            <div v-if="index < fractions.length-1">
+                +
             </div>
         </template>
-
-        <!-- <single-fraction v-bind:starting-numerator="fractions[0].startingNumerator" v-bind:starting-denominator="fractions[0].startingDenominator" />
-        <div>+</div>
-        <single-fraction v-bind:starting-numerator="fractions[1].startingNumerator" v-bind:starting-denominator="fractions[1].startingDenominator" />
-        <div>+</div>
-        <single-fraction v-bind:starting-numerator="fractions[2].startingNumerator" v-bind:starting-denominator="fractions[2].startingDenominator" />
-        <div>=</div> -->
-        <input type="text">
+        =<br>
     </div>
+    <br>
+    <template v-if="allFractionsHaveCommonDenominator()">
+        <div class="container">
+            <single-fraction 
+                :string-numerator="getConcatenatedStringNumerator()" 
+                :starting-numerator="0" 
+                :starting-denominator="fractions[0].modifiedDenominator" 
+                :show-controls="false"
+            />
+            =<br>
+        </div>
+        <br>
+        <div class="container">
+            <single-fraction 
+                :string-numerator="getSummedStringNumerator()" 
+                :starting-numerator="0" 
+                :starting-denominator="fractions[0].modifiedDenominator" 
+                :show-controls="false"
+            />
+        </div>
+    </template>
+    <h2 v-else>
+        Utvid og forkort brøkene ovenfor slik at de får felles nevner.
+    </h2>
 </template>
 
 <script>
@@ -30,21 +64,56 @@ export default {
     data() {
         return {
             fractions: [
-                {
-                    startingNumerator: 2,
-                    startingDenominator: 4,
-                },
-                {
-                    startingNumerator: 5,
-                    startingDenominator: 3,
-                },
-                {
-                    startingNumerator: 180,
-                    startingDenominator: 180,
-                },
-            ]
+                this.getFractionObject(2, 8),
+                this.getFractionObject(4, 8),
+                // this.getFractionObject(3, 8),
+                // this.getFractionObject(10, 8),
+            ],
+            showSummary: false,
         }
-    }
+    },
+    methods: {
+        modifierChanged(event) {
+            this.fractions[event.id].modifier = event.modifier
+            this.fractions[event.id].modifiedNumerator = event.modifiedNumerator
+            this.fractions[event.id].modifiedDenominator = event.modifiedDenominator
+        },
+        allFractionsHaveCommonDenominator() {
+            for(var i=1; i<this.fractions.length; i++){
+                if(this.fractions[i].modifiedDenominator !== this.fractions[0].modifiedDenominator) {
+                    return false;
+                }
+            }
+            return true;
+        },
+        getConcatenatedStringNumerator() {
+            var s = "";
+            for (var i=0; i<this.fractions.length; i++) {
+                s = s + ' '+ this.fractions[i].modifiedNumerator
+                if (i < this.fractions.length-1) {
+                    s = s + ' + '
+                }
+            }
+            return s
+        },
+        getSummedStringNumerator() {
+            var s = "";
+            for (var i=0; i<this.fractions.length; i++) {
+                s += this.fractions[i].modifiedNumerator
+            }
+            return s
+        },
+        getFractionObject(startingNumerator, startingDenominator) {
+            return {
+                stringNumerator: "",
+                startingNumerator,
+                startingDenominator,
+                modifiedNumerator: startingNumerator,
+                modifiedDenominator: startingDenominator,
+                modifier: 0
+            }
+        }
+    },
 }
 </script>
 
@@ -56,6 +125,8 @@ export default {
 	justify-content: flex-start;
 	align-items: center;
 	align-content: center;
+    background-color: #8a8a8a7e;
+    border-radius: 5px;
 }
 .container div {
     padding: 5px;

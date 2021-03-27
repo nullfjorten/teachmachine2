@@ -1,36 +1,51 @@
 <template>
     <div class="fraction">
-        <div class="fas fa-arrow-up" @click="increaseFraction()"></div>
+        <div v-if="showControls" class="fas fa-arrow-up" @click="increaseFraction()"></div>
         <div>
-            <span v-if="modifier == 0">{{startingNumerator}}</span>
-            <span v-else>
-                <span class="faded">{{startingNumerator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedNumerator}}
-            </span>
+            <template v-if="stringNumerator.length > 0">
+                <span>{{stringNumerator}}</span>
+            </template>
+            <template v-else>
+                <span v-if="modifier == 0">{{startingNumerator}}</span>
+                <span v-else>
+                    <span class="faded">{{startingNumerator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedNumerator}}
+                </span>
+            </template>
             <hr>
             <span v-if="modifier == 0">{{startingDenominator}}</span>
             <span v-else>
-                <span class="faded">{{startingNumerator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedDenominator}}
+                <span class="faded">{{startingDenominator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedDenominator}}
             </span>
         </div>
-        <div class="fas fa-arrow-down" @click="decreaseFraction()"></div>
+        <div v-if="showControls" class="fas fa-arrow-down" @click="decreaseFraction()"></div>
     </div>
 </template>
 
 <script>
 export default {
     props: {
-        startingNumerator: {
+        stringNumerator: {
             type: String,
+            required: false,
+            default: ""
+        },
+        startingNumerator: {
+            type: Number,
             required: true
         },
         startingDenominator: {
-            type: String,
+            type: Number,
             required: true
-        }
+        },
+        id: {
+            type: Number,
+            required: false
+        },
+        showControls: { type: Boolean, default: true },
     },
     data() {
         return {
-            modifier: 0
+            modifier: 0,
         }
     },
     computed: {
@@ -53,6 +68,20 @@ export default {
                 return ':'
             } else {
                 return false
+            }
+        }
+    },
+    watch:
+    {
+        modifier(newValue, oldValue)
+        {
+            if (newValue !== oldValue) {
+                this.$emit('modifierChanged', {
+                    modifier: newValue,
+                    modifiedNumerator: this.modifiedNumerator,
+                    modifiedDenominator: this.modifiedDenominator,
+                    id: this.id,
+                })
             }
         }
     },
@@ -86,7 +115,7 @@ export default {
             this.modifier++
         },
         decreaseFraction() {
-            const modWasZero = (this.modifier == 0 ? true : false)
+            const originalModifier = this.modifier
             if (this.modifier == 2) { // Skip 1
                 this.modifier = 0
                 return
@@ -102,9 +131,8 @@ export default {
                 this.modifier--
             }
             while (!this.isDivisible()) {
-                if (this.positivizedMod >= this.startingNumerator || this.positivizedMod >= this.startingDenominator) {
-                    console.log('Caught!');
-                    this.modifier = (modWasZero ? 0 : this.modifier+1)
+                if (this.positivizedMod > this.startingNumerator || this.positivizedMod > this.startingDenominator) {
+                    this.modifier = originalModifier
                     break
                 }
                 this.modifier--
@@ -115,7 +143,6 @@ export default {
             if (this.modifier == 0) { return false }
             if (this.modifier > 0 ) { positiveMod = this.modifier }
             if (this.modifier < 0 ) { positiveMod = this.positivizedMod }
-            console.log('Mod: '+ positiveMod);
             return (this.startingDenominator % positiveMod === 0) && (this.startingNumerator % positiveMod === 0)
         }
     }
@@ -124,7 +151,7 @@ export default {
 
 <style scoped>
 .fraction {
-    min-width: 25px;
+    min-width: 50px;
 }
 .faded {
     opacity: 0.5;
