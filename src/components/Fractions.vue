@@ -68,9 +68,12 @@ export default {
     data() {
         return {
             fractions: [
-                this.getFractionObject(2, 12),
                 this.getFractionObject(4, 12),
-                // this.getFractionObject(3, 12),
+                this.getFractionObject(3, 6),
+                this.getFractionObject(8, 2),
+                // this.getFractionObject(Math.floor(Math.random() * 24) + 1, Math.floor(Math.random() * 24) + 1),
+                // this.getFractionObject(Math.floor(Math.random() * 24) + 1, Math.floor(Math.random() * 24) + 1),
+                // this.getFractionObject(Math.floor(Math.random() * 24) + 1, Math.floor(Math.random() * 24) + 1),
                 // this.getFractionObject(10, 12),
             ],
             showSummary: false,
@@ -81,9 +84,7 @@ export default {
         this.summedFraction = this.getFractionObject(this.getSummedStringNumerator(), this.getCommonDenominator())
     },
     computed: {
-        // summedFraction: function() {
-        //     return this.getFractionObject(this.getSummedStringNumerator(), this.getCommonDenominator())
-        // }
+
     },
     methods: {
         modifierChanged(event) {
@@ -155,11 +156,5 @@ export default {
 .container div {
     padding: 5px;
 }
-hr {
-    border: 1px solid;
-}
-starting[type=text] {
-    width: 40px;
-    margin-left: 5px;
-}
+
 </style>

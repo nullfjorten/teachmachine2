@@ -307,7 +307,7 @@ export default {
     .color-primary-3 { color: #913700 }
     .color-primary-4 { color: #6B2900 } */
 
-    .dark {
+    /* .dark {
         background: #D4621C;
         background: linear-gradient(352deg, #b44b0a, #d37134);
         color: #111;
@@ -319,8 +319,8 @@ export default {
         border-radius: 5px;
         padding: 6px;
         margin: 6px;
-    }
-    button {
+    } */
+    /* button {
         background-color: rgba(30, 56, 136, 1);
         border: 2px solid #555;
         margin: .2em;
@@ -328,11 +328,11 @@ export default {
         color: #ddd;
         font-weight: bold;
         border-radius: 5px;
-    }
+    } */
     input {
         padding: 6px;
     }
-    button.active {
+    /* button.active {
         border: 2px solid #555;
         background-color: rgba(255, 255, 255, 0.4);
         color: rgba(30, 56, 136, 1);
@@ -345,5 +345,5 @@ export default {
     }
     button.operator {
         width: 40px;
-    }
+    } */
 </style>

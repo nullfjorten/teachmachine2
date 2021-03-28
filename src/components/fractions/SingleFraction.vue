@@ -142,7 +142,7 @@ export default {
                 modifier--
             }
             while (!this.isDivisible(modifier)) {
-                if (modifier*-1 > this.startingNumerator || this.modifier*-1 > this.startingDenominator) {
+                if (modifier*-1 > this.startingNumerator || modifier*-1 > this.startingDenominator) {
                     return false
                 }
                 modifier--
@@ -153,7 +153,7 @@ export default {
             if (modifier == 0) { return false }
             modifier = (modifier < 0 ? modifier*-1 : modifier)
             return (this.startingDenominator % modifier === 0) && (this.startingNumerator % modifier === 0)
-        }
+        },
     }
 }
 </script>
@@ -164,5 +164,8 @@ export default {
 }
 .faded {
     opacity: 0.5;
+}
+hr {
+    border: 1px solid;
 }
 </style>
