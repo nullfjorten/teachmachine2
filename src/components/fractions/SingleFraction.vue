@@ -106,16 +106,24 @@ export default {
         increaseFraction() {
             if (this.modifier == 0) { // Skip 1
                 this.modifier = 2
+                // console.log('increaseFraction going from 0 to', this.modifier)
                 return
             }
             if (this.modifier == -2) { // Skip -1
                 this.modifier = 0
+                // console.log('increaseFraction going from -2 to', this.modifier)
                 return
             }
             if (this.modifier < 0) {
                 this.modifier++
+                var numTries = 0
                 while (!this.isDivisible(this.modifier)) {
                     this.modifier++
+                    numTries++
+                    if (numTries > 1000) {
+                        console.error('Caught runaway loop in increaseFraction', numTries)
+                        break
+                    }
                 }
                 return
             }
@@ -128,12 +136,17 @@ export default {
             }
         },
         getNextDecreasedModifier(modifier) {
+            if (isNaN(modifier)) {
+                console.error('getNextDecreasedModifier got NaN as modifier', modifier)
+                return false
+            }
+
             if (modifier == 2) { // Skip 1
                 return 0
             }
             if (modifier > 0) {
                 modifier--;
-                return
+                return modifier
             }
 
             if (modifier == 0) { // Skip -1
@@ -141,9 +154,16 @@ export default {
             } else {
                 modifier--
             }
+
+            var numTries = 0
             while (!this.isDivisible(modifier)) {
                 if (modifier*-1 > this.startingNumerator || modifier*-1 > this.startingDenominator) {
                     return false
+                }
+                numTries++
+                if (numTries > 1000) {
+                    console.error('Caught runaway loop in getNextDecreasedModifier', numTries)
+                    break
                 }
                 modifier--
             }
