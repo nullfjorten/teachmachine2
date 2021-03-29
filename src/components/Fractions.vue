@@ -1,6 +1,7 @@
 <template>
+<div class="panel dark">
     <h1>Brøk</h1>
-    <div class="container">
+    <div class="container panel light">
         <template v-for="(fraction, index) in fractions" :key="index">
             <single-fraction 
                 v-bind:starting-numerator="fraction.startingNumerator" 
@@ -15,7 +16,7 @@
         =<br>
     </div>
     <br>
-    <div class="container">
+    <div class="container panel light">
         <template v-for="(fraction, index) in fractions" :key="index">
             <single-fraction 
                 :starting-numerator="fraction.modifiedNumerator" 
@@ -31,7 +32,7 @@
     </div>
     <br>
     <template v-if="allFractionsHaveCommonDenominator()">
-        <div class="container">
+        <div class="container panel light">
             <single-fraction 
                 :string-numerator="getConcatenatedStringNumerator()" 
                 :starting-numerator="0" 
@@ -57,6 +58,7 @@
     <h2 v-else>
         Utvid og forkort brøkene ovenfor slik at de får felles nevner.
     </h2>
+</div>
 </template>
 
 <script>
@@ -150,8 +152,6 @@ export default {
 	justify-content: flex-start;
 	align-items: center;
 	align-content: center;
-    background-color: #8a8a8a7e;
-    border-radius: 5px;
 }
 .container div {
     padding: 5px;
