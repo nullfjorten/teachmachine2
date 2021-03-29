@@ -27,7 +27,10 @@
                 <div v-else>Feil...</div>
             </div>
         </div>
-        <button class="active" @click="checkAnswersActive = !checkAnswersActive">Sjekk svar</button>
+        <div v-if="false">
+            {{ numCorrect }} korrekte på {{ numTries }} forsøk.
+        </div>
+        <button class="active" @click="checkAnswersClicked()">Sjekk svar</button>
     </div>
 </template>
 
@@ -42,6 +45,8 @@ export default {
             problems: [],
             GREATER_THAN: 0, EQUAL_TO: 1, LESS_THAN: 2,
             checkAnswersActive: false,
+            numCorrect: 0,
+            numTries: 0,
         }
     },
     created() {
@@ -52,7 +57,7 @@ export default {
     },
     methods: {
         generateProblems() {
-            for (var i=0; i<10; i++) {
+            for (var i=0; i<5; i++) {
                 const fraction1 = this.getFractionObject(this.getRandom(1, 10), this.getSensibleDenominator())
                 const fraction2 = this.getFractionObject(this.getRandom(1, 10), this.getSensibleDenominator())
                 const correctAnswer = this.calculateAnswerConst(fraction1, fraction2)
@@ -98,6 +103,23 @@ export default {
         },
         answerClicked(index, answer) {
             this.problems[index].givenAnswer = (this.problems[index].givenAnswer == answer ? null : answer)
+            this.checkAnswersClicked(false)
+        },
+        checkAnswersClicked(enableCheck = null) {
+            if (enableCheck === null) {
+                // if (this.checkAnswersActive === false) {
+                //     for (var i=0; i<this.problems.length; i++) {
+                //         if (this.isCorrectlyAnswered()) {
+                //             this.numCorrect++
+                //         }
+                //     }
+                //     this.numTries++
+                // }
+                this.checkAnswersActive = !this.checkAnswersActive
+            } else {
+                this.checkAnswersActive = enableCheck
+            }
+            return this.checkAnswersActive
         },
         toggleEditFraction(index) {
             // Close all other open edits

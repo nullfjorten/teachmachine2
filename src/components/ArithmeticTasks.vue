@@ -35,7 +35,7 @@
         Correct Answer: {{ correctAnswer }}<br>
         Answer: {{ answer }}<br>
     </div>
-    <div v-show="true">
+    <!-- <div v-show="true">
         <p>Skann denne QR-koden med mobilen for å få lenken til nettstedet:</p>
         <div>
             <a href="https://teachmachine014.web.app">
@@ -45,7 +45,7 @@
         <p>
             <a href="https://github.com/nullfjorten/teachmachine2/blob/main/src/components/ArithmeticTasks.vue" target="_blank">Eller klikk her for prosjektets kildekode.</a>
         </p>
-    </div>
+    </div> -->
 </template>
 
 <script>
