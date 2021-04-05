@@ -1,6 +1,14 @@
 <template>
     <div class="panel dark">
         <h1>Brøk</h1>
+        <div class="faded panel light" style="text-align: left; padding: 6px;">
+            <ul>
+                <li>Velg om brøken på venstre side er større, lik eller mindre enn brøken på høyre side.</li>
+                <li>Bruk redigeringsknappen for å utvide og forkorte brøkene.</li>
+                <li>Trykk 'Sjekk svar' når du er ferdig.</li>
+                <li>Oppdater siden for nye brøker.</li>
+            </ul>
+        </div>
         <div v-for="(problem, index) in problems" :key="index" class="panel light container">
             <button :class="{ active: problems[index].editActivated }" @click="toggleEditFraction(index)"><i class="fas fa-pencil-alt"></i></button>
             <single-fraction 
