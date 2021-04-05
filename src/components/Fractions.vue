@@ -46,12 +46,14 @@
                 :show-controls="true"
                 @modifierChanged="summedFractionModifierChanged"
             />
-            =
-            <single-fraction 
-                :starting-numerator="summedFraction.modifiedNumerator" 
-                :starting-denominator="summedFraction.modifiedDenominator" 
-                :show-controls="false"
-            />
+            <div v-if="false">
+                =
+                <single-fraction 
+                    :starting-numerator="summedFraction.modifiedNumerator" 
+                    :starting-denominator="summedFraction.modifiedDenominator"
+                    :show-controls="false"
+                /> <!-- This is buggy. Shows 'false' until it's updated. Disabled for now. -->
+            </div>
         </div>
 
     </template>
