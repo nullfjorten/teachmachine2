@@ -6,6 +6,18 @@ A rewrite of Teachmachine, a web app for training math.
 ```
 npm install
 ```
+### Upgrade Vue stuff
+```
+vue upgrade
+```
+
+### Stuff... 
+```
+rm -rf node_modules/
+rm package-lock.json
+npm cache verify
+npm i && npm up
+```
 
 ### Compiles and hot-reloads for development
 ```
