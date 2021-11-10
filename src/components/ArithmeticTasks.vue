@@ -54,6 +54,11 @@ export default {
         this.generateProblem();
     },
     mounted () {
+        this.numCorrectAnswers           = Number(localStorage.getItem('numCorrectAnswers'))
+        this.activeProblemTypeIndex      = Number(localStorage.getItem('activeProblemTypeIndex'))
+        this.difficulty                  = localStorage.getItem('difficulty')
+        this.randomProblemTypesActivated = (localStorage.getItem('randomProblemTypesActivated') === 'true')
+        this.tensChallengeActive         = (localStorage.getItem('tensChallengeActive') === 'true')
     },
     data () {
         return {
@@ -70,10 +75,10 @@ export default {
             points: 0,
             problem: '',
             correctAnswer: '',
+            numCorrectAnswers: 0,
             answer: '',
             a: 0,
             b: 0,
-            numCorrectAnswers: 0,
             tensChallengeActive: false,
             previousA: null,
             previousB: null,
@@ -112,9 +117,25 @@ export default {
             else {
                 return false;
             }
-        }
+        },
+        numCorrectAnswers()           { this.updateLocalStorage() },
+        activeProblemTypeIndex()      { this.updateLocalStorage() },
+        difficulty()                  { this.updateLocalStorage() },
+        randomProblemTypesActivated() { this.updateLocalStorage() },
+        tensChallengeActive()         { this.updateLocalStorage() },
     },
     methods: {
+        updateLocalStorage() {
+            try {
+                localStorage.setItem('numCorrectAnswers', this.numCorrectAnswers)
+                localStorage.setItem('activeProblemTypeIndex', this.activeProblemTypeIndex)
+                localStorage.setItem('difficulty', this.difficulty)
+                localStorage.setItem('randomProblemTypesActivated', this.randomProblemTypesActivated)
+                localStorage.setItem('tensChallengeActive', this.tensChallengeActive)
+            } catch (error) {
+            console.error(error);
+            }
+        },
         checkForCommands() {
             if (this.answer === 'debug') {
                 this.showDebug = !this.showDebug;
