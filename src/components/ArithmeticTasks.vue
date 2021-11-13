@@ -54,11 +54,12 @@ export default {
         this.generateProblem();
     },
     mounted () {
-        this.numCorrectAnswers           = Number(localStorage.getItem('numCorrectAnswers'))
-        this.activeProblemTypeIndex      = Number(localStorage.getItem('activeProblemTypeIndex'))
-        this.difficulty                  = localStorage.getItem('difficulty')
-        this.randomProblemTypesActivated = (localStorage.getItem('randomProblemTypesActivated') === 'true')
-        this.tensChallengeActive         = (localStorage.getItem('tensChallengeActive') === 'true')
+        if (localStorage.getItem('numCorrectAnswers') !== null)           { this.numCorrectAnswers           = Number(localStorage.getItem('numCorrectAnswers')) }
+        if (localStorage.getItem('activeProblemTypeIndex') !== null)      { this.activeProblemTypeIndex      = Number(localStorage.getItem('activeProblemTypeIndex')) }
+        if (localStorage.getItem('difficulty') !== null)                  { this.difficulty                  = localStorage.getItem('difficulty') }
+        if (localStorage.getItem('randomProblemTypesActivated') !== null) { this.randomProblemTypesActivated = (localStorage.getItem('randomProblemTypesActivated') === 'true') }
+        if (localStorage.getItem('tensChallengeActive') !== null)         { this.tensChallengeActive         = (localStorage.getItem('tensChallengeActive') === 'true') }
+        this.generateProblem();
     },
     data () {
         return {
@@ -66,7 +67,7 @@ export default {
                 { 'operator': '+', 'heading': '+ Addisjon (pluss)' },
                 { 'operator': '-', 'heading': '- Subraksjon (minus)' },
                 { 'operator': '*', 'heading': '* Multiplikasjon (gange)' },
-                { 'operator': '/', 'heading': '/ Divisjon (dele)' },
+                { 'operator': '/', 'heading': ': Divisjon (dele)' },
             ],
             activeProblemTypeIndex: 2, // 0-4
             randomProblemTypesActivated: false,
