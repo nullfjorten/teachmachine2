@@ -1,12 +1,19 @@
 <template>
-    <div class="dark panel" style="margin: 0;">
-        <div>
-            <h2>{{ problem }} =</h2>
-        </div>
+    <div class="dark panel backgroundPanel" :style="{margin: 0, backgroundImage: `url(${publicPath}student.svg)`, backgroundRepeat: 'no-repeat', backgroundPosition: '12% 12%'}">
+        <transition name="problem" @after-leave="problemAnimationAfterLeave">
+            <div v-if="showProblem" class="problem">
+                {{ problem }} =
+            </div>
+        </transition>
 
-        <div>
-            <input type="text" v-model="answer" ref="txtAnswer" @keypress.enter="enterPressed()" pattern="\d*" placeholder="Skriv svaret her">
-        </div>
+        <transition name="answer" appear mode="out-in">
+            <div v-if="this.selectAnswersActive" class="potentialAnswerContainer">
+                <button v-for="potentialAnswer in this.potentialAnswers" :key="potentialAnswer" @click="setAnswer(potentialAnswer)" class="potentialAnswer">{{potentialAnswer}}</button>
+            </div>
+            <div v-else>
+                <input class="answer" type="text" v-model="answer" ref="txtAnswer" @keypress.enter="enterPressed()" pattern="\d*" placeholder="Skriv svaret her">
+            </div>
+        </transition>
 
         <div class="dark panel" style="padding: 0">
             <div class="light panel">
@@ -24,7 +31,8 @@
                     <button :class="[difficulty == '3' ? 'active' : '']" @click="setProblemDifficulty('3')">Vanskelig</button>
                 </div>
                 <div>
-                    <button :class="[tensChallengeActive == '1' ? 'active' : '']" @click="toggleTensChallenge(true)" title="Tiervenner">10</button>
+                    <button :class="[tensChallengeActive == '1' ? 'active' : '']" @click="toggleTensChallenge()" title="Tiervenner">10</button>
+                    <button :class="[selectAnswersActive == '1' ? 'active' : '']" @click="toggleSelectAnswers()" title="Velg svar"><i class="fa fa-hand-pointer"></i></button>
                 </div>
             </div>
         </div>
@@ -35,34 +43,25 @@
         Correct Answer: {{ correctAnswer }}<br>
         Answer: {{ answer }}<br>
     </div>
-    <!-- <div v-show="true">
-        <p>Skann denne QR-koden med mobilen for å få lenken til nettstedet:</p>
-        <div>
-            <a href="https://teachmachine014.web.app">
-                <img src="../assets/qr-link.png" alt="QR-kode, link til siden">
-            </a>
-        </div>
-        <p>
-            <a href="https://github.com/nullfjorten/teachmachine2/blob/main/src/components/ArithmeticTasks.vue" target="_blank">Eller klikk her for prosjektets kildekode.</a>
-        </p>
-    </div> -->
 </template>
 
 <script>
 export default {
     created() {
-        this.generateProblem();
     },
-    mounted () {
+    mounted() {
         if (localStorage.getItem('numCorrectAnswers') !== null)           { this.numCorrectAnswers           = Number(localStorage.getItem('numCorrectAnswers')) }
         if (localStorage.getItem('activeProblemTypeIndex') !== null)      { this.activeProblemTypeIndex      = Number(localStorage.getItem('activeProblemTypeIndex')) }
         if (localStorage.getItem('difficulty') !== null)                  { this.difficulty                  = localStorage.getItem('difficulty') }
         if (localStorage.getItem('randomProblemTypesActivated') !== null) { this.randomProblemTypesActivated = (localStorage.getItem('randomProblemTypesActivated') === 'true') }
         if (localStorage.getItem('tensChallengeActive') !== null)         { this.tensChallengeActive         = (localStorage.getItem('tensChallengeActive') === 'true') }
-        this.generateProblem();
+        if (localStorage.getItem('selectAnswersActive') !== null)         { this.selectAnswersActive         = (localStorage.getItem('selectAnswersActive') === 'true') }
+        this.generateProblem()
+        this.generatePotentialAnswers()
     },
-    data () {
+    data() {
         return {
+            publicPath: process.env.BASE_URL,
             problemTypes: [
                 { 'operator': '+', 'heading': '+ Addisjon (pluss)' },
                 { 'operator': '-', 'heading': '- Subraksjon (minus)' },
@@ -78,19 +77,22 @@ export default {
             correctAnswer: '',
             numCorrectAnswers: 0,
             answer: '',
+            potentialAnswers: [],
             a: 0,
             b: 0,
             tensChallengeActive: false,
+            selectAnswersActive: false,
             previousA: null,
             previousB: null,
             showDebug: false,
+            showProblem: true,
         }
     },
     computed: {
-        operator () {
+        operator() {
             return this.problemTypes[this.activeProblemTypeIndex].operator;
         },
-        heading () {
+        heading() {
             if (this.randomProblemTypesActivated) {
                 return this.randomProblemTypeHeading;
             }
@@ -99,6 +101,8 @@ export default {
             }
         },
         isCorrect() {
+            //alert('Answer: '+ this.answer +'. Length: '+ this.answer.length)
+
             if (this.answer.length > 0 && this.answer == this.correctAnswer) {
                 return true;
             }
@@ -111,8 +115,10 @@ export default {
         answer() {
             if (this.answer == 'debug') { this.showDebug = !this.showDebug }
             if (this.isCorrect) {
-                this.numCorrectAnswers++;
-                this.generateProblem();
+                this.numCorrectAnswers++
+                this.showProblem = false
+                this.generateProblem()
+                this.generatePotentialAnswers()
                 return true;
             }
             else {
@@ -124,6 +130,7 @@ export default {
         difficulty()                  { this.updateLocalStorage() },
         randomProblemTypesActivated() { this.updateLocalStorage() },
         tensChallengeActive()         { this.updateLocalStorage() },
+        selectAnswersActive()         { this.updateLocalStorage() },
     },
     methods: {
         updateLocalStorage() {
@@ -133,9 +140,15 @@ export default {
                 localStorage.setItem('difficulty', this.difficulty)
                 localStorage.setItem('randomProblemTypesActivated', this.randomProblemTypesActivated)
                 localStorage.setItem('tensChallengeActive', this.tensChallengeActive)
+                localStorage.setItem('selectAnswersActive', this.selectAnswersActive)
             } catch (error) {
             console.error(error);
             }
+        },
+        problemAnimationAfterLeave() {
+            this.generateProblem()
+            this.generatePotentialAnswers()
+            this.showProblem = true
         },
         checkForCommands() {
             if (this.answer === 'debug') {
@@ -145,6 +158,7 @@ export default {
         activateRandomProblemTypes(active = true) {
             this.randomProblemTypesActivated = active;
             this.generateProblem();
+            this.generatePotentialAnswers()
         },
         setActiveProblemType(problemTypeOperator) {
             this.activateRandomProblemTypes(false);
@@ -155,24 +169,30 @@ export default {
                     }
                     this.activeProblemTypeIndex = i;
                     this.generateProblem();
+                    this.generatePotentialAnswers()
                     return true; // Changed
                 }
             }
             console.error('Invalid problemTypeOperator', problemTypeOperator);
             return false;
         },
-        setProblemDifficulty (difficulty) {
+        setProblemDifficulty(difficulty) {
             this.difficulty = difficulty;
             this.generateProblem();
+            this.generatePotentialAnswers()
         },
-        toggleTensChallenge () {
+        toggleTensChallenge() {
             this.tensChallengeActive = !this.tensChallengeActive;
             this.generateProblem();
+            this.generatePotentialAnswers()
         },
-        setTensChallenge (active = true) {
+        toggleSelectAnswers() {
+            this.selectAnswersActive = !this.selectAnswersActive;
+        },
+        setTensChallenge(active = true) {
             this.tensChallengeActive = active;
         },
-        generateProblem () {
+        generateProblem() {
             // Store data from previous problem (setRandomIntAB uses this to avoid repeats of the same problem)
             this.previousA = this.a;
             this.previousB = this.b;
@@ -269,6 +289,23 @@ export default {
             this.correctAnswer = eval(this.a + operator + this.b);
             this.answer = '';
         },
+        generatePotentialAnswers() {
+            this.potentialAnswers = []
+            let numTries = 0
+            while (numTries < 100 && this.potentialAnswers.length <= 4) {
+                this.generateProblem()
+                if (!this.potentialAnswers.includes(this.correctAnswer)) {
+                    this.potentialAnswers.push(this.correctAnswer)
+                }
+            }
+            this.shuffleArray(this.potentialAnswers)
+        },
+        shuffleArray(arr) {
+            arr.sort(() => Math.random() - 0.5)
+        },
+        setAnswer(potentialAnswer) {
+            this.answer = potentialAnswer.toString()
+        },
         focusInputField() {
             this.$refs.txtAnswer.focus();
         },
@@ -323,49 +360,62 @@ export default {
 
 
 <style scoped>
-    /*.color-primary-0 { color: #AF4A0B }	
-    .color-primary-1 { color: #E38348 }
-    .color-primary-2 { color: #D4621C }
-    .color-primary-3 { color: #913700 }
-    .color-primary-4 { color: #6B2900 } */
+    /* Animations for switching between the text input box and the multiple selection buttons */
+    .answer-enter-from,
+    .answer-leave-to {
+        opacity: 0;
+        transform: scale(.2);
+    }
+    .answer-enter-active,
+    .answer-leave-active {
+        transition: all .3s ease;
+    }
 
-    /* .dark {
-        background: #D4621C;
-        background: linear-gradient(352deg, #b44b0a, #d37134);
-        color: #111;
+    /* Animations for the math problem flipping when correct answer is entered */
+    .problem-enter-from,
+    .problem-leave-to {
+        transform: rotateX(90deg);
     }
-    .light {
-        background-color: #ffffff44;
+    .problem-enter-active,
+    .problem-leave-active {
+        transition: all .1s ease;
     }
-    .panel {
-        border-radius: 5px;
-        padding: 6px;
-        margin: 6px;
-    } */
-    /* button {
-        background-color: rgba(30, 56, 136, 1);
-        border: 2px solid #555;
-        margin: .2em;
-        padding: 10px;
-        color: #ddd;
+
+    input.answer {
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 20px;
+        border: 0;
+        padding: .5em;
+        margin: .5em;
+        min-width: 250px;
+        display: inline-block;
+    }
+    .problem {
+        min-height: 2em;
+        background-color: rgba(255, 255, 255, 1);
+        border-radius: 20px;
+        font-size: 2em;
         font-weight: bold;
-        border-radius: 5px;
-    } */
-    input {
-        padding: 6px;
+        line-height: 2em;
+        min-width: 100px;
+        display: inline-block;
+        margin: .5em;
+        padding: 0 .75em;
     }
-    /* button.active {
-        border: 2px solid #555;
-        background-color: rgba(255, 255, 255, 0.4);
-        color: rgba(30, 56, 136, 1);
+
+    .potentialAnswer {
+        display: inline-block;
+        min-width: 3em;
+        margin: .2em;
     }
-    button i {
-        color: #ddd;
+    .potentialAnswer:hover {
+        transform: translateX(-2px) translateY(-2px);
+        box-shadow: 3px 3px 5px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
     }
-    button.active i {
-        color: rgba(30, 56, 136, 1);
+    .potentialAnswerContainer {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: center;
+        margin: .5em;
     }
-    button.operator {
-        width: 40px;
-    } */
 </style>
