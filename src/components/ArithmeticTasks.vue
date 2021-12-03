@@ -1,5 +1,5 @@
 <template>
-    <div class="dark panel backgroundPanel" :style="{margin: 0, backgroundImage: `url(${publicPath}student.svg)`, backgroundRepeat: 'no-repeat', backgroundPosition: '12% 12%'}">
+    <div class="dark panel backgroundPanel" :style="{backgroundImage: `url(${publicPath}student.svg)`, backgroundRepeat: 'no-repeat', backgroundPosition: '12% 12%'}">
         <transition name="problem" @after-leave="problemAnimationAfterLeave">
             <div v-if="showProblem" class="problem">
                 {{ problem }} =
@@ -81,7 +81,7 @@ export default {
             a: 0,
             b: 0,
             tensChallengeActive: false,
-            selectAnswersActive: false,
+            selectAnswersActive: true,
             previousA: null,
             previousB: null,
             showDebug: false,

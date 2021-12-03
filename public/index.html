@@ -1,9 +1,14 @@
 <!DOCTYPE html>
-<html lang="">
-  <head>
+<html lang="no">
+
+<head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta name="apple-mobile-web-app-title" content="Olas TeachMachine014" />
+    <meta name="description" content="Lær deg å bli bedre og raskere i hoderegning med TeachMachine014!">
+    <meta name=”robots” content="index, follow">
+
 
     <link rel="apple-touch-icon" sizes="57x57" href="<%= BASE_URL %>apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="<%= BASE_URL %>apple-icon-60x60.png">
@@ -14,7 +19,7 @@
     <link rel="apple-touch-icon" sizes="144x144" href="<%= BASE_URL %>apple-icon-144x144.png">
     <link rel="apple-touch-icon" sizes="152x152" href="<%= BASE_URL %>apple-icon-152x152.png">
     <link rel="apple-touch-icon" sizes="180x180" href="<%= BASE_URL %>apple-icon-180x180.png">
-    <link rel="icon" type="image/png" sizes="192x192"  href="<%= BASE_URL %>android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="<%= BASE_URL %>android-icon-192x192.png">
     <link rel="icon" type="image/png" sizes="32x32" href="<%= BASE_URL %>favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="96x96" href="<%= BASE_URL %>favicon-96x96.png">
     <link rel="icon" type="image/png" sizes="16x16" href="<%= BASE_URL %>favicon-16x16.png">
@@ -24,7 +29,8 @@
     <meta name="theme-color" content="#ffffff">
 
 
-    <title><%= htmlWebpackPlugin.options.title %></title>
+    <!-- <title><%= htmlWebpackPlugin.options.title %></title> -->
+    <title>Olas TeachMachine014</title>
     <style>
         body {
             color: #222;
@@ -36,46 +42,69 @@
             margin: 0;
             padding: 0;
         }
-        body, input {
+
+        body,
+        input {
             font-size: 18px;
         }
-        a { color: #229; }
+
+        a {
+            color: #229;
+        }
+
         .dark {
             color: #111;
             background: #F36363;
         }
+
         .light {
             background: #ECECEC80;
         }
+
         .panel {
             border-radius: 20px;
             padding: 1em;
             margin: 0;
         }
+
         .backgroundPanel {
             border-radius: 0 !important;
+            margin: 0;
         }
+
+        .left {
+            text-align: left;
+        }
+
+        .marginBottom {
+            margin-bottom: 1em;
+        }
+
         button {
             border: 2px solid #555;
             margin: .2em;
             padding: 10px;
             font-weight: bold;
             border-radius: 12px;
-            background-color: rgba(30, 56, 136, 1);
-            color: #ddd;
-            cursor: pointer;
-        }
-        button.active {
             background-color: rgba(255, 255, 255, 0.4);
             color: rgba(30, 56, 136, 1);
+            cursor: pointer;
+        }
+        
+        button.active {
+            background-color: rgba(30, 56, 136, 1);
+            color: #ddd;
             border: 2px solid #555;
         }
+
         button i {
-            color: #ddd;
-        }
-        button.active i {
             color: rgba(30, 56, 136, 1);
         }
+        
+        button.active i {
+            color: #ddd;
+        }
+
         button.operator {
             width: 40px;
         }
@@ -95,10 +124,12 @@
             body {
                 margin: 75px 100px;
             }
+
             .panel {
                 padding: 1em;
                 margin: 6px;
             }
+
             .backgroundPanel {
                 border-radius: 20px !important;
             }
@@ -107,16 +138,25 @@
         /* Extra large devices (large laptops and desktops, 1200px and up) */
         @media only screen and (min-width: 1200px) {}
     </style>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-  </head>
-  <body>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+</head>
+
+<body>
     <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+        <p><strong>We're sorry but TeachMachine014 doesn't work properly without JavaScript enabled. Please enable it to
+                continue.</strong></p>
+        <p><strong>Beklager, men denne læringsappen for matematikk, TeachMachine014, fungerer ikke uten JavaScript
+                aktivert. Hvis du aktiverer JavaScript vil du kunne bruke appen til å blant annet trene matte og
+                matteferdigheter ved å gjøre oppgaver som å øve gangetabell, øve på tiervenner, øve de fire regneartene
+                (pluss, minus, gange, dele -- addisjon, subtraksjon, multiplikasjon og divisjon).</strong></p>
     </noscript>
     <div id="app"></div>
-    <div></div><a href="/">Regnearter</a></div>
-    <div></div><a href="/brok">Brøk, fellesnevner (beta)</a></div>
-    <div></div><a href="/brok2">Brøk, sammenligning (beta)</a></div>
+    <div class="panel light backgroundPanel" style="margin-top: 1em;">
+        <div><a href="/">Regnearter</a></div>
+        <div><a href="/brok">Brøk, fellesnevner (beta)</a></div>
+        <div><a href="/brok2">Brøk, sammenligning (beta)</a></div>
+    </div>
     <div>
         <p>Skann denne QR-koden med mobilen for å få lenken til nettstedet:</p>
         <div>
@@ -125,9 +165,11 @@
             </a>
         </div>
         <p>
-            <a href="https://github.com/nullfjorten/teachmachine2/blob/main/src/components/ArithmeticTasks.vue" target="_blank">Eller klikk her for prosjektets kildekode.</a>
+            <a href="https://github.com/nullfjorten/teachmachine2/blob/main/src/components/ArithmeticTasks.vue"
+                target="_blank">Eller klikk her for prosjektets kildekode.</a>
         </p>
     </div>
     <!-- built files will be auto injected -->
-  </body>
+</body>
+
 </html>

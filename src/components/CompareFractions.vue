@@ -1,7 +1,9 @@
 <template>
-    <div class="panel dark">
-        <h1>Brøk</h1>
-        <div class="faded panel light" style="text-align: left; padding: 6px;">
+    <div class="panel dark backgroundPanel" :style="{backgroundImage: `url(${publicPath}student.svg)`, backgroundRepeat: 'no-repeat', backgroundPosition: '8% 2%'}">
+        <div class="panel light marginBottom">
+            <h1 style="margin: 0;">Brøk</h1>
+        </div>
+        <div class="faded panel light marginBottom left">
             <ul>
                 <li>Velg om brøken på venstre side er større, lik eller mindre enn brøken på høyre side.</li>
                 <li>Bruk redigeringsknappen for å utvide og forkorte brøkene.</li>
@@ -9,7 +11,7 @@
                 <li>Oppdater siden for nye brøker.</li>
             </ul>
         </div>
-        <div v-for="(problem, index) in problems" :key="index" class="panel light container">
+        <div v-for="(problem, index) in problems" :key="index" class="panel light container marginBottom">
             <button :class="{ active: problems[index].editActivated }" @click="toggleEditFraction(index)"><i class="fas fa-pencil-alt"></i></button>
             <single-fraction 
                 v-bind:starting-numerator="problem.fraction1.startingNumerator" 
@@ -50,6 +52,7 @@ export default {
     },
     data() {
         return {
+            publicPath: process.env.BASE_URL,
             problems: [],
             GREATER_THAN: 0, EQUAL_TO: 1, LESS_THAN: 2,
             checkAnswersActive: false,
@@ -150,7 +153,7 @@ export default {
 	justify-content: flex-start;
 	align-items: center;
 	align-content: center;
-    border-radius: 5px;
+    border-radius: 20px;
 }
 .container div {
     padding: 5px;

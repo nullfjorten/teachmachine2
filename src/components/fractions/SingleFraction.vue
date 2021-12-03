@@ -6,16 +6,29 @@
                 <span>{{stringNumerator}}</span>
             </template>
             <template v-else>
-                <span v-if="modifier == 0">{{startingNumerator}}</span>
+                <!-- <span v-if="modifier == 0">{{startingNumerator}}</span>
                 <span v-else>
                     <span class="faded">{{startingNumerator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedNumerator}}
-                </span>
+                </span> -->
+
+                <span>{{startingNumerator}}</span>
+                <transition name="modifiedfraction" @after-leave="showModification = true">
+                    <span v-if="showModification && modifier != 0" style="display: inline-block">
+                        <span>{{divideOrMultiplySign}}{{positivizedMod}}</span>={{modifiedNumerator}}
+                    </span>
+                </transition>
             </template>
             <hr>
-            <span v-if="modifier == 0">{{startingDenominator}}</span>
+            <!-- <span v-if="modifier == 0">{{startingDenominator}}</span>
             <span v-else>
                 <span class="faded">{{startingDenominator}}{{divideOrMultiplySign}}{{positivizedMod}}=</span>{{modifiedDenominator}}
-            </span>
+            </span> -->
+            <span>{{startingDenominator}}</span>
+            <transition name="modifiedfraction">
+                <span v-if="showModification && modifier != 0" style="display: inline-block">
+                    <span>{{divideOrMultiplySign}}{{positivizedMod}}</span>={{modifiedDenominator}}
+                </span>
+            </transition>
         </div>
         <div v-if="showControls" class="fas fa-arrow-down" :class="{ faded: !isReducible }" @click="decreaseFraction()"></div>
     </div>
@@ -46,6 +59,7 @@ export default {
     data() {
         return {
             modifier: 0,
+            showModification: true,
         }
     },
     computed: {
@@ -90,6 +104,9 @@ export default {
                     id: this.id,
                 })
             }
+            // if (newValue == 0) {
+            //     this.showModification = true // Ugh, this abomination should not be! Hack to enable animation even past modifier==0...
+            // }
         }
     },
     methods: {
@@ -128,11 +145,13 @@ export default {
                 return
             }
             this.modifier++
+            this.showModification = false
         },
         decreaseFraction() {
             const nextDecreasedModifier = this.getNextDecreasedModifier(this.modifier)
             if (nextDecreasedModifier !== false) {
                 this.modifier = nextDecreasedModifier
+                this.showModification = false
             }
         },
         getNextDecreasedModifier(modifier) {
@@ -179,6 +198,15 @@ export default {
 </script>
 
 <style scoped>
+.modifiedfraction-enter-from,
+.modifiedfraction-leave-to {
+    opacity: 0;
+    transform: scale(0);
+}
+.modifiedfraction-enter-active,
+.modifiedfraction-leave-active {
+    transition: all .5s;
+}
 .fraction {
     min-width: 50px;
 }
